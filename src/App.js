@@ -1,32 +1,13 @@
 import React from 'react';
+import List from './List';
+import Search from './Search';
 import './App.css';
-
 
 
 function getTitle(title) {
   return title;
 }
 
-//component definition
-
-const List = ({ list }) => {
-  return (
-    <ul style={{listStyle: 'none'}}>
-
-      {list.map((item) => {
-        return (            
-          <li key={item.objectID}>
-            <span><a href={item.url}>{item.title}</a></span>
-            <span>{item.author}</span>
-            <span>{item.num_comments}</span>
-            <span>{item.points}</span>
-          </li>            
-        );
-      })}
-    </ul>       
-
-  );
-}
 
 const App = () => {
 
@@ -49,27 +30,19 @@ const App = () => {
     },
   ];
 
-  const handleChange = event => {
-    console.log(event.target.value);
+  //callback handler
+  const handleSearch = event => {
+    console.log(event.target.value)
   };
+  
 
   return (
     <div className="App">
-      <h1>Function returns {getTitle('argument')}</h1>
+      <h1>Search {getTitle('App')}</h1>
 
-      <label 
-        htmlFor='search'
-      >
-        Search
-      </label>
-
-      <input 
-        id='search' 
-        type='text' 
-        onChange={handleChange} 
-      />
-
+      <Search onSearch={handleSearch} />
       <hr />
+
       {/* component instance, used like any other html element */}
        <List list={stories}/>
     </div>
