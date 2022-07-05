@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import List from './List';
 //import Search from './Search';
 import './App.css';
@@ -21,7 +21,7 @@ const useSemiPersistentState = (key, initialState) => {
 
 const App = () => {
 
-  const stories = [
+  const initialStories = [
     {
       title: 'React',
       url: 'https://reactjs.org/',
@@ -46,6 +46,8 @@ const App = () => {
     'React'
   );
 
+  const [stories, setStories] = useState(initialStories);
+
   //useEffect(() => {
   //  localStorage.setItem('search', setSearchTerm);
   //}, [setSearchTerm]);
@@ -60,6 +62,13 @@ const App = () => {
     story.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
     );
   
+  const handleRemoveStory = item => {
+    const newStories = stories.filter(
+      story => item.objectID !== story.objectID    
+    );
+
+    setStories(newStories);
+  };
 
   return (
     <div className="App">
@@ -68,10 +77,9 @@ const App = () => {
       {/*<Search search={searchTerm} onSearch={handleSearch} />*/}
 
       <InputWithLabel 
-        id='search'
-        label='Search'
-        value={searchTerm}
-        type= 'text'
+        id='search'        
+        value={searchTerm}  
+        isFocused      
         onInputChange={handleSearch}
       >
         <strong>Search:</strong>
@@ -79,23 +87,34 @@ const App = () => {
       <hr />
 
       {/* component instance, used like any other html element */}
-       <List list={searchedStories}/>
+       <List list={searchedStories} onRemoveItem={handleRemoveStory} />
     </div>
   );
 }
 
+//new component
+const InputWithLabel = ({ id, value, type = 'text', onInputChange, isFocused, children }) => {
 
-const InputWithLabel = ({ id, label, value, onInputChange, children }) => (
-  <>
-    <label htmlFor={id}>{children}</label>
-    &nbsp;
-    <input 
-      id={id}
-      type={type}
-      value={value}
-      onChange={onInputChange}
-    />
-  </>
-);
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
+  return (
+    <>
+      <label htmlFor={id}>{children}</label>
+      &nbsp;
+      <input 
+        id={id}
+        type={type}
+        value={value}
+        autoFocus={isFocused}
+        onChange={onInputChange}
+      />
+    </>
+  );
+};
 
 export default App;
