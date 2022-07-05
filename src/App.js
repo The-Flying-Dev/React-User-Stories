@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import List from './List';
 import Search from './Search';
 import './App.css';
@@ -31,11 +31,16 @@ const App = () => {
   ];
 
   //lifting state from Search component
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem('search') || 'React'
+  );
 
+  useEffect(() => {
+    localStorage.setItem('search', setSearchTerm);
+  }, [setSearchTerm]);
   //callback handler to get data back up from the search component
   const handleSearch = event => {
-    setSearchTerm(event.target.value)
+    setSearchTerm(event.target.value);
   };
 
   //filter returns array with items matching the criteria, need to lowercase to match
@@ -48,7 +53,7 @@ const App = () => {
     <div className="App">
       <h1>Search {getTitle('App')}</h1>
 
-      <Search onSearch={handleSearch} />
+      <Search search={searchTerm} onSearch={handleSearch} />
       <hr />
 
       {/* component instance, used like any other html element */}

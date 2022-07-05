@@ -1,26 +1,17 @@
 import React from 'react';
 
 
-const Search = props => {
-  
-{/* 
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleChange = event => {
-    setSearchTerm(event.target.value);
-    props.onSearch(event); //to send data back to the app component to be shared among other components
-  };
-*/}
+const Search = ({ search, onSearch }) => { 
 
   return (
     <div>
-
       <label htmlFor='search'>Search</label>
-      <input id='search' type='text' onChange={props.onSearch} />
-      <p>
-        Searching for <strong>{searchTerm}</strong>
-      </p>
-
+      <input 
+        id='search' 
+        type='text' 
+        onChange={onSearch} 
+        value={search}
+      />
     </div>
   );
 };
