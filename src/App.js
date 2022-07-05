@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import List from './List';
-import Search from './Search';
+//import Search from './Search';
 import './App.css';
 
 
-function getTitle(title) {
-  return title;
-}
+
+//custom hook
+const useSemiPersistentState = (key, initialState) => {
+  const [value, setValue] = useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+};
 
 
 const App = () => {
@@ -31,13 +41,15 @@ const App = () => {
   ];
 
   //lifting state from Search component
-  const [searchTerm, setSearchTerm] = useState(
-    localStorage.getItem('search') || 'React'
+  const [searchTerm, setSearchTerm] = useSemiPersistentState(
+    'search',
+    'React'
   );
 
-  useEffect(() => {
-    localStorage.setItem('search', setSearchTerm);
-  }, [setSearchTerm]);
+  //useEffect(() => {
+  //  localStorage.setItem('search', setSearchTerm);
+  //}, [setSearchTerm]);
+
   //callback handler to get data back up from the search component
   const handleSearch = event => {
     setSearchTerm(event.target.value);
@@ -51,9 +63,19 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>Search {getTitle('App')}</h1>
+      <h1>Search App</h1>
 
-      <Search search={searchTerm} onSearch={handleSearch} />
+      {/*<Search search={searchTerm} onSearch={handleSearch} />*/}
+
+      <InputWithLabel 
+        id='search'
+        label='Search'
+        value={searchTerm}
+        type= 'text'
+        onInputChange={handleSearch}
+      >
+        <strong>Search:</strong>
+      </InputWithLabel>
       <hr />
 
       {/* component instance, used like any other html element */}
@@ -61,5 +83,19 @@ const App = () => {
     </div>
   );
 }
+
+
+const InputWithLabel = ({ id, label, value, onInputChange, children }) => (
+  <>
+    <label htmlFor={id}>{children}</label>
+    &nbsp;
+    <input 
+      id={id}
+      type={type}
+      value={value}
+      onChange={onInputChange}
+    />
+  </>
+);
 
 export default App;
