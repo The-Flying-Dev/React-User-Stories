@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import List from './List';
 import Search from './Search';
 import './App.css';
@@ -30,10 +30,18 @@ const App = () => {
     },
   ];
 
-  //callback handler
+  //lifting state from Search component
+  const [searchTerm, setSearchTerm] = useState('');
+
+  //callback handler to get data back up from the search component
   const handleSearch = event => {
-    console.log(event.target.value)
+    setSearchTerm(event.target.value)
   };
+
+  //filter returns array with items matching the criteria, need to lowercase to match
+  const searchedStories = stories.filter(story => 
+    story.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
+    );
   
 
   return (
@@ -44,7 +52,7 @@ const App = () => {
       <hr />
 
       {/* component instance, used like any other html element */}
-       <List list={stories}/>
+       <List list={searchedStories}/>
     </div>
   );
 }
