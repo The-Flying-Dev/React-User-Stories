@@ -4,11 +4,19 @@ import React from 'react';
 const List = ({ list, onRemoveItem }) =>
 
 //passing values from the List component's list object into the Item component
-  list.map(item => <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />);
+  list.map(item => (
+    <Item 
+      key={item.objectID} 
+      item={item} 
+      onRemoveItem={onRemoveItem} 
+      />
+  ));
 
   const Item = ({ item, onRemoveItem }) => {
 
-    
+    function handleRemoveItem () {
+      onRemoveItem(item);
+    }   
 
     return (
       <div>
